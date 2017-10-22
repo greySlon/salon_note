@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ public interface MasterRepository extends PagingAndSortingRepository<Master, Lon
 
   Optional<Master> findById(Long id);
 
+  @Transactional
   @Modifying
   @Query("UPDATE Master m set m.enabled = 0 where m.id = ?1")
   void disable(Long id);

@@ -1,7 +1,9 @@
 package com.greyslon.abi.services;
 
 import com.greyslon.abi.domain.Utils;
+import com.greyslon.abi.exceptions.NoProceduresSpecifiedException;
 import com.greyslon.abi.exceptions.ProcedureNotFoundException;
+import com.greyslon.abi.exceptions.ProcedureNotSpecifiedException;
 import com.greyslon.abi.models.Procedure;
 import com.greyslon.abi.repositories.ProcedureRepository;
 
@@ -20,10 +22,6 @@ public class ProcedureService {
   @Autowired
   private ProcedureRepository procedureRepository;
 
-  public Procedure getById(Long id) throws ProcedureNotFoundException {
-    return procedureRepository.findById(id).orElseThrow(() -> new ProcedureNotFoundException());
-  }
-
   public List<Procedure> getAllProcedures() {
     return procedureRepository.findAll();
   }
@@ -32,27 +30,23 @@ public class ProcedureService {
     return procedureRepository.save(procedure);
   }
 
-  public Procedure update(Procedure procedure) throws ProcedureNotFoundException {
+  public Procedure update(Procedure procedure) {
     Procedure merged = merge(procedure);
     return procedureRepository.save(merged);
   }
 
-  @Transactional
   public void disable(Long id) {
     procedureRepository.disable(id);
   }
 
-  public Procedure merge(Procedure procedure) throws ProcedureNotFoundException {
-    Procedure procedureStored = procedureRepository.findById(procedure.getId())
+  public Procedure merge(Procedure procedure) {
+    if (procedure == null || procedure.getId() == null) {
+      throw new ProcedureNotSpecifiedException();
+    }
+
+    Long id = procedure.getId();
+    Procedure procedureStored = procedureRepository.findById(id)
         .orElseThrow(() -> new ProcedureNotFoundException());
     return Utils.updateState(procedureStored, procedure);
-  }
-
-  public Set<Procedure> attach(Collection<Procedure> procedures) throws ProcedureNotFoundException {
-    Set<Procedure> procedureSet = new HashSet<>();
-    for (Procedure procedure : procedures) {
-      procedureSet.add(getById(procedure.getId()));
-    }
-    return procedureSet;
   }
 }

@@ -2,6 +2,7 @@ package com.greyslon.abi.services;
 
 import com.greyslon.abi.domain.Utils;
 import com.greyslon.abi.exceptions.MasterNotFoundException;
+import com.greyslon.abi.exceptions.MasterNotSpecifiedException;
 import com.greyslon.abi.models.Master;
 import com.greyslon.abi.repositories.MasterRepository;
 
@@ -21,7 +22,7 @@ public class MasterService {
     return masterRepository.save(master);
   }
 
-  public Master getMaster(Long id) throws MasterNotFoundException {
+  public Master getMaster(Long id) {
     return masterRepository.findById(id).orElseThrow(() -> new MasterNotFoundException());
   }
 
@@ -34,17 +35,19 @@ public class MasterService {
     return masterRepository.save(merged);
   }
 
-  public Master findByID(Long id) throws MasterNotFoundException {
+  public Master findByID(Long id) {
     return masterRepository.findById(id).orElseThrow(() -> new MasterNotFoundException());
   }
 
-
-  @Transactional
   public void disable(Long id) {
     masterRepository.disable(id);
   }
 
   public Master merge(Master master) throws MasterNotFoundException {
+    if (master == null || master.getId() == null) {
+      throw new MasterNotSpecifiedException();
+    }
+
     Long id = master.getId();
     Master masterStored = masterRepository.findById(id)
         .orElseThrow(() -> new MasterNotFoundException());

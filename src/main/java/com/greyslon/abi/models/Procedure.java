@@ -25,13 +25,16 @@ public class Procedure {
   @Column(name = "name", unique = true)
   private String name;
 
-  @Column(name = "enabled", columnDefinition = "BIT(1) NULL DEFAULT 1")
+  @Column(name = "enabled", columnDefinition = "BIT(1) NULL DEFAULT 1", nullable = false)
   private Boolean enabled;
 
   @JsonIgnore
   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "procedures")
   private Set<WorkItem> workItems;
 
+  public Procedure() {
+    this.enabled = false;
+  }
 
   public Long getId() {
     return id;

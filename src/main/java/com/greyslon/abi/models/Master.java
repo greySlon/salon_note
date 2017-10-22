@@ -1,5 +1,6 @@
 package com.greyslon.abi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Set;
@@ -38,6 +39,7 @@ public class Master {
   @Column(name = "enabled", columnDefinition = "BIT(1) NULL DEFAULT 1")
   private Boolean enabled = true;
 
+  @JsonIgnore
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "master")
   private Set<WorkItem> workItems;
 
