@@ -30,9 +30,13 @@ public class Master {
   @JsonProperty(value = "last_name")
   private String lastName;
 
+  @Column(name = "photo")
+  private String photo;
+
   @Column(name = "email")
   private String email;
 
+  @JsonIgnore
   @Column(name = "password")
   private String password;
 
@@ -97,5 +101,13 @@ public class Master {
 
   public void setWorkItems(Set<WorkItem> workItems) {
     this.workItems = workItems;
+  }
+
+  public String getPhoto() {
+    return photo;
+  }
+
+  public void setPhoto(String photo) {
+    this.photo = photo;
   }
 }
