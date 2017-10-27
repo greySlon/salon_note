@@ -1,0 +1,28 @@
+/* CSS Document */
+.login_form{
+	display: flex;
+    width: 300px;
+    border-radius: 0.5rem;
+    box-shadow: 2px 2px 13px #000;
+    border: 1px solid #909;
+    margin: auto;
+    margin-top: 30px;
+    flex-flow: column;}
+.login_form input{ margin:10px;}
+
+.admin-navigation{
+	text-align: center;}
+
+.admin-navigation button {
+    margin: 0.5rem;
+}
+
+.master_photo{
+	text-align: center;
+}
+.master_photo img{
+	max-width: 5rem;
+    max-height: 5rem;
+    margin: 5px;
+    border-radius: 2.5rem;
+}
