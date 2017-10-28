@@ -1,4 +1,6 @@
 /* CSS Document */
+.hide{display:none;}
+
 .login_form{
 	display: flex;
     width: 300px;
