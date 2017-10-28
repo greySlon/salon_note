@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -61,6 +62,13 @@ public class WorkItem {
   @JoinColumn(name = "master_id")
   private Master master;
 
+  public WorkItem() {
+  }
+
+  public WorkItem(LocalDate serviceDate) {
+    this.serviceDate = serviceDate;
+    this.procedures = Collections.EMPTY_SET;
+  }
 
   public Long getId() {
     return id;

@@ -14,7 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkItemService {
@@ -33,6 +36,31 @@ public class WorkItemService {
   public List<WorkItem> getByDate(LocalDate date, Long masterId, Pageable pageable) {
     Master master = masterService.findByID(masterId);
     return workItemRepository.findByServiceDateGreaterThanEqualAndMaster(date, master, pageable);
+  }
+
+  public Map<Integer, WorkItem> getWeekSchedule(LocalDate date, Long masterId, long weekNumber) {
+    Map<Integer, WorkItem> map = new HashMap<>();
+    int offset = date.getDayOfWeek().ordinal();
+    LocalDate startDate = date.minusDays(offset + 7 * weekNumber);
+    LocalDate endDate = startDate.plusDays(6);
+    List<WorkItem> weekSchedule = workItemRepository.getWeekSchedule(startDate, endDate);
+    List<LocalDate> dateList = weekSchedule
+        .stream()
+        .map(workItem -> workItem.getServiceDate())
+        .collect(Collectors.toList());
+
+    LocalDate emptyDate = startDate;
+    while (emptyDate.getDayOfMonth() <= endDate.getDayOfMonth()) {
+      if (!dateList.contains(emptyDate)) {
+//        weekSchedule.add(new WorkItem(emptyDate));
+        map.put(emptyDate.getDayOfWeek().ordinal(), new WorkItem(emptyDate));
+      }
+      emptyDate = emptyDate.plusDays(1L);
+    }
+    for (WorkItem workItem : weekSchedule) {
+      map.put(workItem.getServiceDate().getDayOfWeek().ordinal(), workItem);
+    }
+    return map;
   }
 
   public List<WorkItem> getByDate(LocalDate date, Pageable pageable) {

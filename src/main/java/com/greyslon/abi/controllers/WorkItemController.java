@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/workitem")
@@ -46,6 +47,19 @@ public class WorkItemController {
       Pageable pageable) {
     try {
       List<WorkItem> workItems = workItemService.getByDate(date, master_id, pageable);
+      response.put(WORK_ITEM_LIST, workItems);
+    } catch (Exception e) {
+      response.put(STATUS, e.getMessage());
+    }
+    return response;
+  }
+
+  @RequestMapping(value = "/get_week")
+  public Response getWorkItemsByWeek(@RequestParam(name = "master_id") Long master_id,
+      @RequestParam(name = "date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date,
+      @RequestParam(name = "week") long week) {
+    try {
+      Map<Integer, WorkItem> workItems = workItemService.getWeekSchedule(date, master_id, week);
       response.put(WORK_ITEM_LIST, workItems);
     } catch (Exception e) {
       response.put(STATUS, e.getMessage());
