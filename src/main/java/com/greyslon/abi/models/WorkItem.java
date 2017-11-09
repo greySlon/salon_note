@@ -61,7 +61,6 @@ public class WorkItem {
   )
   private Set<Procedure> procedures;
 
-  @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "master_id")
   private Master master;
