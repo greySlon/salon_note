@@ -1,6 +1,7 @@
 package com.greyslon.abi.controllers;
 
 import static com.greyslon.abi.domain.ResponseKey.STATUS;
+import static com.greyslon.abi.domain.ResponseKey.WEEK_SCHEDULE;
 import static com.greyslon.abi.domain.ResponseKey.WORK_ITEM;
 import static com.greyslon.abi.domain.ResponseKey.WORK_ITEM_LIST;
 
@@ -59,8 +60,8 @@ public class WorkItemController {
       @RequestParam(name = "date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date,
       @RequestParam(name = "week") long week) {
     try {
-      Map<Integer, WorkItem> workItems = workItemService.getWeekSchedule(date, master_id, week);
-      response.put(WORK_ITEM_LIST, workItems);
+      Map<Integer, Map<String, Object>> workItems = workItemService.getWeekSchedule(date, master_id, week);
+      response.put(WEEK_SCHEDULE, workItems);
     } catch (Exception e) {
       response.put(STATUS, e.getMessage());
     }

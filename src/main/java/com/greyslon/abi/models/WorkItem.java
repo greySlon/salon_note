@@ -2,6 +2,7 @@ package com.greyslon.abi.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ public class WorkItem {
   @Column(name = "id")
   public Long id;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "client_id")
   private Client client;
@@ -47,6 +49,7 @@ public class WorkItem {
   @Column(name = "service_date")
   private LocalDate serviceDate;
 
+  @JsonIgnore
   @Column(name = "canceled", columnDefinition = "BIT(1) NULL DEFAULT 0")
   private boolean canceled;
 
@@ -58,6 +61,7 @@ public class WorkItem {
   )
   private Set<Procedure> procedures;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "master_id")
   private Master master;

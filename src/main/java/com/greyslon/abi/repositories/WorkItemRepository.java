@@ -31,9 +31,11 @@ public interface WorkItemRepository extends PagingAndSortingRepository<WorkItem,
   @Query("SELECT wi FROM WorkItem wi where wi.serviceDate >= ?1 and wi.canceled = false")
   List<WorkItem> findByServiceDateGreaterThanEqual(LocalDate date, Pageable pageable);
 
-  @Query("SELECT wi FROM WorkItem wi where wi.serviceDate >= ?1 and wi.serviceDate <= ?2 and wi.canceled = false")
-  List<WorkItem> getWeekSchedule(LocalDate startDate,
-      LocalDate endDate);
+  @Query("SELECT wi FROM WorkItem wi where wi.serviceDate >= ?1 "
+      + "and wi.serviceDate <= ?2 "
+      + "and wi.master.id = ?3 "
+      + "and wi.canceled = false")
+  List<WorkItem> getWeekSchedule(LocalDate startDate, LocalDate endDate, Long masterId);
 
   @Transactional
   @Modifying

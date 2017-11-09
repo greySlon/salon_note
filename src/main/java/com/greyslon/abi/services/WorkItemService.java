@@ -14,10 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class WorkItemService {
@@ -38,27 +39,39 @@ public class WorkItemService {
     return workItemRepository.findByServiceDateGreaterThanEqualAndMaster(date, master, pageable);
   }
 
-  public Map<Integer, WorkItem> getWeekSchedule(LocalDate date, Long masterId, long weekNumber) {
-    Map<Integer, WorkItem> map = new HashMap<>();
+  public Map<Integer, Map<String, Object>> getWeekSchedule(LocalDate date, Long masterId,
+      long weekNumber) {
     int offset = date.getDayOfWeek().ordinal();
     LocalDate startDate = date.minusDays(offset + 7 * weekNumber);
     LocalDate endDate = startDate.plusDays(6);
-    List<WorkItem> weekSchedule = workItemRepository.getWeekSchedule(startDate, endDate);
-    List<LocalDate> dateList = weekSchedule
-        .stream()
-        .map(workItem -> workItem.getServiceDate())
-        .collect(Collectors.toList());
 
+    List<WorkItem> weekSchedule = workItemRepository.getWeekSchedule(startDate, endDate, masterId);
+
+    Map<Integer, Map<String, Object>> map = initResponse(startDate, endDate);
+    return fillResponse(map, weekSchedule);
+  }
+
+  private Map<Integer, Map<String, Object>> fillResponse(
+      Map<Integer, Map<String, Object>> map,
+      List<WorkItem> weekSchedule) {
+    for (WorkItem workItem : weekSchedule) {
+      int day = workItem.getServiceDate().getDayOfWeek().ordinal();
+      ((ArrayList<WorkItem>) map.get(day).get("workItems")).add(workItem);
+    }
+    return map;
+  }
+
+  private Map<Integer, Map<String, Object>> initResponse(LocalDate startDate,
+      LocalDate endDate) {
+    Map<Integer, Map<String, Object>> map = new HashMap<>();
     LocalDate emptyDate = startDate;
     while (emptyDate.getDayOfMonth() <= endDate.getDayOfMonth()) {
-      if (!dateList.contains(emptyDate)) {
-//        weekSchedule.add(new WorkItem(emptyDate));
-        map.put(emptyDate.getDayOfWeek().ordinal(), new WorkItem(emptyDate));
-      }
+      Map<String, Object> innerMap = new HashMap<>();
+      innerMap.put("date", emptyDate.format(DateTimeFormatter.ofPattern("dd-MM-yyy")));
+      innerMap.put("workItems", new ArrayList<>());
+
+      map.put(emptyDate.getDayOfWeek().ordinal(), innerMap);
       emptyDate = emptyDate.plusDays(1L);
-    }
-    for (WorkItem workItem : weekSchedule) {
-      map.put(workItem.getServiceDate().getDayOfWeek().ordinal(), workItem);
     }
     return map;
   }
@@ -83,7 +96,6 @@ public class WorkItemService {
     }
     WorkItem workItemStored = workItemRepository.findById(workItem.getId())
         .orElseThrow(() -> new WorkItemNotFoundException());
-    WorkItem workItemMerged = Utils.updateState(workItemStored, workItem);
-    return workItemMerged;
+    return Utils.updateState(workItemStored, workItem);
   }
 }
