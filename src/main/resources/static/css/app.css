@@ -10,6 +10,7 @@
     margin: auto;
     margin-top: 30px;
     flex-flow: column;}
+
 .login_form input{ margin:10px;}
 
 .admin-navigation{
@@ -19,12 +20,38 @@
     margin: 0.5rem;
 }
 
-.master_photo{
-	text-align: center;
+.master_photo {
+    display: flex;
+    justify-content: center;
 }
-.master_photo img{
-	max-width: 5rem;
-    max-height: 5rem;
-    margin: 5px;
+.master_block {
+    width: 6rem;
+    float: left;
+    text-align: center;
+}
+.master_block img {
+    max-width: 5rem;
     border-radius: 2.5rem;
+}
+/*schedule*/
+.schedule{
+	  border: 1px solid #000;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 2px 1px 6px #000;}
+.schedule h2{
+    display: block;
+    margin-bottom: 15px;
+    border-bottom: dashed;
+    font-size: 1.1rem;
+    font-style: italic;
+	}
+.time{
+	  font-weight: bold;
+    margin: 0 0.1rem;
+    display: inline-block;}
+.comment {
+    border: 1px dotted #000;
+    padding: 0.3rem;
+    margin-top: 0.3rem;
 }

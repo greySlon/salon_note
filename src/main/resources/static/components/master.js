@@ -1,31 +1,36 @@
 class Master extends React.Component{
     constructor(props){
         super(props);
-        this.state={credentials:this.props.credentials,
+        this.state={
+          credentials:this.props.credentials,
           masters:this.props.masters,
-          schedule:false};
+          callback:this.props.callback
+        };
         this.renderList=this.renderList.bind(this);
         this.onClick=this.onClick.bind(this);
         console.log("Master#constructor:"+this.state.masters);
     }
     className:"master_photo";
+
     onClick(e){
-        alert(e.target.dataset.id);
-        this.setState({schedule:true});
+        console.log("Master#onClick:"+e.target.dataset.id);
+        this.state.callback(e.target.dataset.id);
     }
     renderList(item,i){
-        return <img src="img/photo.jpg" onClick={this.onClick} data-id={item.id}  />;
+        return <div class="master_block">
+                    	<img src="img/photo.jpg" onClick={this.onClick} data-id={item.id} />
+                        <div>{item.first_name}</div>
+                    </div>;
     }
 
     render(){
-        console.log("Master#render:"+this.state.masters.length);
+        console.log("Master#render");
         this.className=(this.state.credentials.role)?"master_photo":"hide";
 
         return <div>
                   <div className={this.className}>
                       {this.state.masters.map(this.renderList)}
                   </div>
-                  <Schedule />
                </div>
     }
 }

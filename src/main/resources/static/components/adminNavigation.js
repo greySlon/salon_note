@@ -5,11 +5,14 @@ class AdminNavigation extends React.Component{
     }
     className="hide";
     render(){
-         this.className=(this.state.credentials.role==="ROLE_ADMIN")?"admin-navigation":"hide";
-         return   <div className={this.className}>
+         //this.className=(this.state.credentials.role==="ROLE_ADMIN")?"admin-navigation":"hide";
+         if(this.state.credentials.role==="ROLE_ADMIN")
+            return   <div className={this.className}>
                       <button>Добавить</button>
                       <button>Изменить</button>
                       <button>Расписание</button>
                      </div>;
+         else
+            return "";
         }
 }
