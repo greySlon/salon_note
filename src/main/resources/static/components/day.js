@@ -10,7 +10,7 @@ class Day extends React.Component{
 
     renderComment(comment){
         if(comment)
-            return <div class="comment">{workItem.comment}</div>;
+            return <div class="comment">{comment}</div>;
     }
 
     renderProcedures(procedures){
