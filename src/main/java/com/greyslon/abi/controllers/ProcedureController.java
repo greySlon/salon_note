@@ -1,10 +1,5 @@
 package com.greyslon.abi.controllers;
 
-import static com.greyslon.abi.domain.ResponseKey.PROCEDURE;
-import static com.greyslon.abi.domain.ResponseKey.PROCEDURE_LIST;
-import static com.greyslon.abi.domain.ResponseKey.STATUS;
-
-import com.greyslon.abi.domain.Response;
 import com.greyslon.abi.models.Procedure;
 import com.greyslon.abi.services.ProcedureService;
 
@@ -22,51 +17,25 @@ import java.util.List;
 public class ProcedureController {
 
   @Autowired
-  private Response response;
-  @Autowired
   private ProcedureService procedureService;
 
   @RequestMapping(value = "/all")
-  public Response getProcedures() {
-    try {
-      List<Procedure> allProcedures = null;
-      allProcedures = procedureService.getAllProcedures();
-      response.put(PROCEDURE_LIST, allProcedures);
-    } catch (Exception ex) {
-      response.put(STATUS, ex.getMessage());
-    }
-    return response;
+  public List<Procedure> getProcedures() {
+    return procedureService.getAllProcedures();
   }
 
   @RequestMapping(value = "/add", method = RequestMethod.PUT)
-  public Response add(@RequestBody Procedure procedure) {
-    try {
-      Procedure savedProcedure = procedureService.save(procedure);
-      response.put(PROCEDURE, savedProcedure);
-    } catch (Exception ex) {
-      response.put(STATUS, ex.getMessage());
-    }
-    return response;
+  public Procedure add(@RequestBody Procedure procedure) {
+    return procedureService.save(procedure);
   }
 
   @RequestMapping(value = "/update", method = RequestMethod.POST)
-  public Response update(@RequestBody Procedure procedure) {
-    try {
-      Procedure updatedProcedure = procedureService.update(procedure);
-      response.put(PROCEDURE, updatedProcedure);
-    } catch (Exception ex) {
-      response.put(STATUS, ex.getMessage());
-    }
-    return response;
+  public Procedure update(@RequestBody Procedure procedure) {
+    return procedureService.update(procedure);
   }
 
   @RequestMapping(value = "/disable", method = RequestMethod.POST)
-  public Response disable(@RequestParam(name = "id") Long id) {
-    try {
-      procedureService.disable(id);
-    } catch (Exception ex) {
-      response.put(STATUS, ex.getMessage());
-    }
-    return response;
+  public void disable(@RequestParam(name = "id") Long id) {
+    procedureService.disable(id);
   }
 }
