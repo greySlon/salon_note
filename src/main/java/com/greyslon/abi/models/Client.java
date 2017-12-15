@@ -30,7 +30,7 @@ public class Client {
   @Column(name = "last_name")
   private String lastName;
 
-  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "clients")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
   private Set<Phone> phones;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "client")

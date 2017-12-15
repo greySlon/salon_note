@@ -33,7 +33,7 @@ public class Procedure {
   private Set<WorkItem> workItems;
 
   public Procedure() {
-    this.enabled = false;
+    this.enabled = true;
   }
 
   public Long getId() {
