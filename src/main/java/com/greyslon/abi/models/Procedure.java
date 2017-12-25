@@ -1,8 +1,7 @@
 package com.greyslon.abi.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.Set;
+import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,20 +19,28 @@ public class Procedure {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  public Long id;
+  private Long id;
 
   @Column(name = "name", unique = true)
   private String name;
 
-  @Column(name = "enabled", columnDefinition = "BIT(1) NULL DEFAULT 1", nullable = false)
-  private Boolean enabled;
+  @Column(name = "enabled", columnDefinition = "BIT(1) DEFAULT 1", nullable = false)
+  private Boolean enabled = true;
 
-  @JsonIgnore
   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "procedures")
-  private Set<WorkItem> workItems;
+  private List<WorkItem> workItems;
+
 
   public Procedure() {
-    this.enabled = true;
+
+  }
+
+  public Procedure(ProcedureDto procedureDto) {
+    this.name = procedureDto.name;
+  }
+
+  public Procedure(String name) {
+    this.name = name;
   }
 
   public Long getId() {
@@ -60,11 +67,28 @@ public class Procedure {
     this.enabled = enabled;
   }
 
-  public Set<WorkItem> getWorkItems() {
+  public List<WorkItem> getWorkItems() {
     return workItems;
   }
 
-  public void setWorkItems(Set<WorkItem> workItems) {
+  public void setWorkItems(List<WorkItem> workItems) {
     this.workItems = workItems;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Procedure procedure = (Procedure) o;
+    return Objects.equals(name, procedure.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
   }
 }

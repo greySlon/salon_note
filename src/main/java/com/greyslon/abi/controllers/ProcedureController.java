@@ -1,6 +1,6 @@
 package com.greyslon.abi.controllers;
 
-import com.greyslon.abi.models.Procedure;
+import com.greyslon.abi.models.ProcedureDto;
 import com.greyslon.abi.services.ProcedureService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,23 +19,33 @@ public class ProcedureController {
   @Autowired
   private ProcedureService procedureService;
 
-  @RequestMapping(value = "/all")
-  public List<Procedure> getProcedures() {
-    return procedureService.getAllProcedures();
+  @RequestMapping(value = "/actual")
+  public List<ProcedureDto> getActual() {
+    return procedureService.getActual();
+  }
+
+  @RequestMapping(value = "/archived")
+  public List<ProcedureDto> getArchived() {
+    return procedureService.getArchived();
   }
 
   @RequestMapping(value = "/add", method = RequestMethod.PUT)
-  public Procedure add(@RequestBody Procedure procedure) {
-    return procedureService.save(procedure);
+  public void add(@RequestBody ProcedureDto procedureDto) {
+    procedureService.save(procedureDto);
   }
 
   @RequestMapping(value = "/update", method = RequestMethod.POST)
-  public Procedure update(@RequestBody Procedure procedure) {
-    return procedureService.update(procedure);
+  public void update(@RequestBody ProcedureDto procedureDto) {
+    procedureService.update(procedureDto);
   }
 
   @RequestMapping(value = "/disable", method = RequestMethod.POST)
   public void disable(@RequestParam(name = "id") Long id) {
     procedureService.disable(id);
+  }
+
+  @RequestMapping(value = "/enable", method = RequestMethod.POST)
+  public void enable(@RequestParam(name = "id") Long id) {
+    procedureService.enable(id);
   }
 }
