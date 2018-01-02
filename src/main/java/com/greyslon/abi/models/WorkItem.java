@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -17,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -29,12 +28,7 @@ public class WorkItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  public Long id;
-
-  @JsonIgnore
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "client_id")
-  private Client client;
+  private Long id;
 
   @Column(name = "comment", length = 300)
   private String comment;
@@ -50,27 +44,39 @@ public class WorkItem {
   private LocalDate serviceDate;
 
   @JsonIgnore
-  @Column(name = "canceled", columnDefinition = "BIT(1) NULL DEFAULT 0")
-  private boolean canceled;
+  @Column(name = "canceled", columnDefinition = "BIT(1) DEFAULT 0")
+  private boolean canceled = false;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "workitem_procedure",
-      joinColumns = @JoinColumn(name = "workitem_id"),
-      inverseJoinColumns = @JoinColumn(name = "procedure_id")
-  )
-  private Set<Procedure> procedures;
+  @JsonIgnore
+  @ManyToMany
+  private Set<Procedure> procedures = new HashSet<>();
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @JsonIgnore
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "client_id")
+  private Person client;
+
+  @JsonIgnore
+  @ManyToOne
   @JoinColumn(name = "master_id")
-  private Master master;
+  private Person master;
+
 
   public WorkItem() {
   }
 
   public WorkItem(LocalDate serviceDate) {
     this.serviceDate = serviceDate;
-    this.procedures = Collections.EMPTY_SET;
+  }
+
+  public void addProcedure(Procedure procedure) {
+    this.procedures.add(procedure);
+    procedure.getWorkItems().add(this);
+  }
+
+  public void removeProcedure(Procedure procedure) {
+    this.procedures.remove(procedure);
+    procedure.getWorkItems().remove(this);
   }
 
   public Long getId() {
@@ -89,11 +95,11 @@ public class WorkItem {
     this.canceled = canceled;
   }
 
-  public Client getClient() {
+  public Person getClient() {
     return client;
   }
 
-  public void setClient(Client client) {
+  public void setClient(Person client) {
     this.client = client;
   }
 
@@ -129,11 +135,11 @@ public class WorkItem {
     this.procedures = procedures;
   }
 
-  public Master getMaster() {
+  public Person getMaster() {
     return master;
   }
 
-  public void setMaster(Master master) {
+  public void setMaster(Person master) {
     this.master = master;
   }
 }

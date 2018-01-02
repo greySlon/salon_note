@@ -1,6 +1,7 @@
-package com.greyslon.abi.models;
+package com.greyslon.abi.models.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.greyslon.abi.models.Procedure;
 
 public class ProcedureDto {
 

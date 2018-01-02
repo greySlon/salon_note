@@ -3,7 +3,7 @@ package com.greyslon.abi.services;
 import com.greyslon.abi.exceptions.ProcedureNotFoundException;
 import com.greyslon.abi.exceptions.ProcedureNotSpecifiedException;
 import com.greyslon.abi.models.Procedure;
-import com.greyslon.abi.models.ProcedureDto;
+import com.greyslon.abi.models.dto.ProcedureDto;
 import com.greyslon.abi.repositories.ProcedureRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

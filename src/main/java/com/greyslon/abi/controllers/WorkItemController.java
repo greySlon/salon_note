@@ -1,10 +1,9 @@
 package com.greyslon.abi.controllers;
 
-import com.greyslon.abi.models.WorkItem;
+import com.greyslon.abi.models.dto.WorkItemDto;
 import com.greyslon.abi.services.WorkItemService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,39 +23,36 @@ public class WorkItemController {
   private WorkItemService workItemService;
 
   @RequestMapping(value = "/add", method = RequestMethod.PUT)
-  public WorkItem add(@RequestBody WorkItem workItem) {
-    return workItemService.add(workItem);
-  }
-
-  @RequestMapping(value = "/get")
-  public List<WorkItem> getWorkItemsByDate(@RequestParam(name = "master_id") Long master_id,
-      @RequestParam(name = "date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date,
-      Pageable pageable) {
-    return workItemService.getByDate(date, master_id, pageable);
-  }
-
-  @RequestMapping(value = "/get_week")
-  public Map<Integer, Map<String, Object>> getWorkItemsByWeek(
-      @RequestParam(name = "master_id") Long master_id,
-      @RequestParam(name = "date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date,
-      @RequestParam(name = "week") long week) {
-    return workItemService.getWeekSchedule(date, master_id, week);
-  }
-
-  @RequestMapping(value = "/get_all")
-  public List<WorkItem> getAllWorkItemByDate(
-      @RequestParam(name = "date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date,
-      Pageable pageable) {
-    return workItemService.getByDate(date, pageable);
+  public void add(@RequestBody WorkItemDto workItemDto) {
+    workItemService.add(workItemDto);
   }
 
   @RequestMapping(value = "/update", method = RequestMethod.POST)
-  public WorkItem update(@RequestBody WorkItem workItem) {
-    return workItemService.update(workItem);
+  public void update(@RequestBody WorkItemDto workItemDto) {
+    workItemService.update(workItemDto);
+  }
+
+  @RequestMapping(value = "/get")
+  public List<WorkItemDto> getWorkItemsByDate(@RequestParam(name = "master_id") Long master_id,
+      @RequestParam(name = "date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) {
+    return workItemService.getByDate(date, master_id);
+  }
+
+  @RequestMapping(value = "/get_week")
+  public Map<Integer, List<WorkItemDto>> getWorkItemsByWeek(
+      @RequestParam(name = "master_id") Long master_id,
+      @RequestParam(name = "week_offset") long weekOffset) {
+    return workItemService.getWeekSchedule(master_id, weekOffset);
+  }
+
+  @RequestMapping(value = "/get_all")
+  public List<WorkItemDto> getAllWorkItemByDate(
+      @RequestParam(name = "date") @DateTimeFormat(pattern = "dd-MM-yyyy") LocalDate date) {
+    return workItemService.getByDate(date);
   }
 
   @RequestMapping(value = "/cancel", method = RequestMethod.POST)
-  public void cancel(@RequestParam(name = "id") Long id) {
+  public void cancel(@RequestParam(name = "masterId") Long id) {
     workItemService.cancel(id);
   }
 }

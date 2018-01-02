@@ -1,6 +1,6 @@
 package com.greyslon.abi.controllers;
 
-import com.greyslon.abi.models.ProcedureDto;
+import com.greyslon.abi.models.dto.ProcedureDto;
 import com.greyslon.abi.services.ProcedureService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.awt.PageAttributes.MediaType;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class ProcedureController {
   @Autowired
   private ProcedureService procedureService;
 
-  @RequestMapping(value = "/actual")
+  @RequestMapping(value = "/actual"/*, headers = "Accept=application/xml"*/)
   public List<ProcedureDto> getActual() {
     return procedureService.getActual();
   }
@@ -40,12 +41,12 @@ public class ProcedureController {
   }
 
   @RequestMapping(value = "/disable", method = RequestMethod.POST)
-  public void disable(@RequestParam(name = "id") Long id) {
+  public void disable(@RequestParam(name = "masterId") Long id) {
     procedureService.disable(id);
   }
 
   @RequestMapping(value = "/enable", method = RequestMethod.POST)
-  public void enable(@RequestParam(name = "id") Long id) {
+  public void enable(@RequestParam(name = "masterId") Long id) {
     procedureService.enable(id);
   }
 }

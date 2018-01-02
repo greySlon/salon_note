@@ -14,10 +14,6 @@ import java.util.Optional;
 @Repository
 public interface ProcedureRepository extends JpaRepository<Procedure, Long> {
 
-  Procedure save(Procedure procedure);
-
-  List<Procedure> findAll();
-
   Optional<Procedure> findById(Long id);
 
   @Query("select p from Procedure p where p.enabled = true ")
@@ -36,4 +32,6 @@ public interface ProcedureRepository extends JpaRepository<Procedure, Long> {
   @Modifying
   @Query("UPDATE Procedure p SET p.enabled = true WHERE p.id = ?1")
   void enable(Long id);
+
+  Procedure save(Procedure procedure);
 }

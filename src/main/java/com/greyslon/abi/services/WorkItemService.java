@@ -1,24 +1,23 @@
 package com.greyslon.abi.services;
 
 import com.greyslon.abi.domain.Utils;
-import com.greyslon.abi.exceptions.MasterNotFoundException;
-import com.greyslon.abi.exceptions.ProcedureNotFoundException;
 import com.greyslon.abi.exceptions.WorkItemNotFoundException;
 import com.greyslon.abi.exceptions.WorkItemNotSpecifiedException;
-import com.greyslon.abi.models.Master;
+import com.greyslon.abi.models.Person;
 import com.greyslon.abi.models.WorkItem;
+import com.greyslon.abi.models.dto.ProcedureDto;
+import com.greyslon.abi.models.dto.WorkItemDto;
 import com.greyslon.abi.repositories.WorkItemRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class WorkItemService {
@@ -28,74 +27,86 @@ public class WorkItemService {
   @Autowired
   private ProcedureService procedureService;
   @Autowired
-  private MasterService masterService;
+  private PersonService personService;
 
-  public WorkItem add(WorkItem workItem) {
-    return workItemRepository.save(workItem);
+  public void add(WorkItemDto workItemDto) {
+    WorkItem workItem = workItemDto.buildWorkItem();
+    for (ProcedureDto procedure : workItemDto.procedures) {
+      workItem.addProcedure(procedureService.findProcedure(procedure.id));
+    }
+    Person master = personService.findPerson(workItemDto.masterId);
+    Person client = personService.findPerson(workItemDto.clientId);
+    workItem.setMaster(master);
+    workItem.setClient(client);
+
+    workItemRepository.save(workItem);
   }
 
-  public List<WorkItem> getByDate(LocalDate date, Long masterId, Pageable pageable) {
-    Master master = masterService.findByID(masterId);
-    return workItemRepository.findByServiceDateGreaterThanEqualAndMaster(date, master, pageable);
+  public void update(WorkItemDto workItemDto) {
+    if (workItemDto.id == null) {
+      throw new WorkItemNotSpecifiedException();
+    }
+    WorkItem workItem = workItemRepository.findById(workItemDto.id)
+        .orElseThrow(() -> new WorkItemNotFoundException());
+
+    if (workItemDto.comment != null) {
+      workItem.setComment(workItemDto.comment);
+    }
+    if (workItemDto.serviceDate != null) {
+      workItem.setServiceDate(workItemDto.serviceDate);
+    }
+    if (workItemDto.serviceTime != null) {
+      workItem.setServiceTime(workItemDto.serviceTime);
+    }
+    if (workItemDto.masterId != null && workItemDto.masterId != workItem.getMaster().getId()) {
+      Person master = personService.findPerson(workItemDto.masterId);
+      workItem.setMaster(master);
+    }
+    if (workItemDto.clientId != null && workItemDto.clientId != workItem.getClient().getId()) {
+      Person client = personService.findPerson(workItemDto.clientId);
+    }
+    if (workItemDto.procedures != null) {
+      workItem.getProcedures().clear();
+      for (ProcedureDto procedure : workItemDto.procedures) {
+        workItem.addProcedure(procedureService.findProcedure(procedure.id));
+      }
+    }
+    workItemRepository.save(workItem);
   }
 
-  public Map<Integer, Map<String, Object>> getWeekSchedule(LocalDate date, Long masterId,
-      long weekNumber) {
-    int offset = date.getDayOfWeek().ordinal();
-    LocalDate startDate = date.minusDays(offset + 7 * weekNumber);
+  public List<WorkItemDto> getByDate(LocalDate date, Long masterId) {
+    Person master = personService.findPerson(masterId);
+    return workItemRepository.findByServiceDateAndMaster(date, master).stream()
+        .map(workItem -> new WorkItemDto(workItem))
+        .collect(Collectors.toList());
+  }
+
+  public Map<Integer, List<WorkItemDto>> getWeekSchedule(Long masterId, long weekOffset) {
+    LocalDate currentDate = LocalDate.now();
+    LocalDate startDate = currentDate
+        .minusDays(currentDate.getDayOfWeek().ordinal() + 7 * weekOffset);
     LocalDate endDate = startDate.plusDays(6);
+    List<WorkItem> weekSchedule = workItemRepository
+        .findByPeriodAndMaster(startDate, endDate, masterId);
 
-    List<WorkItem> weekSchedule = workItemRepository.getWeekSchedule(startDate, endDate, masterId);
-
-    Map<Integer, Map<String, Object>> map = initResponse(startDate, endDate);
-    return fillResponse(map, weekSchedule);
-  }
-
-  private Map<Integer, Map<String, Object>> fillResponse(
-      Map<Integer, Map<String, Object>> map,
-      List<WorkItem> weekSchedule) {
-    for (WorkItem workItem : weekSchedule) {
-      int day = workItem.getServiceDate().getDayOfWeek().ordinal();
-      ((ArrayList<WorkItem>) map.get(day).get("workItems")).add(workItem);
-    }
+    Map<Integer, List<WorkItemDto>> map = new HashMap<>();
+    IntStream.range(0, 7).forEach(day -> {
+      List<WorkItemDto> dtoList = weekSchedule.stream()
+          .filter(wi -> wi.getServiceDate().getDayOfWeek().ordinal() == day)
+          .map(wi -> new WorkItemDto(wi))
+          .collect(Collectors.toList());
+      map.put(day, dtoList);
+    });
     return map;
   }
 
-  private Map<Integer, Map<String, Object>> initResponse(LocalDate startDate,
-      LocalDate endDate) {
-    Map<Integer, Map<String, Object>> map = new HashMap<>();
-    LocalDate emptyDate = startDate;
-    while (emptyDate.getDayOfMonth() <= endDate.getDayOfMonth()) {
-      Map<String, Object> innerMap = new HashMap<>();
-      innerMap.put("date", emptyDate.format(DateTimeFormatter.ofPattern("dd-MM-yyy")));
-      innerMap.put("workItems", new ArrayList<>());
-
-      map.put(emptyDate.getDayOfWeek().ordinal(), innerMap);
-      emptyDate = emptyDate.plusDays(1L);
-    }
-    return map;
-  }
-
-  public List<WorkItem> getByDate(LocalDate date, Pageable pageable) {
-    return workItemRepository.findByServiceDateGreaterThanEqual(date, pageable);
-  }
-
-  public WorkItem update(WorkItem workItem)
-      throws ProcedureNotFoundException, MasterNotFoundException {
-    workItem = merge(workItem);
-    return workItemRepository.save(workItem);
+  public List<WorkItemDto> getByDate(LocalDate date) {
+    return workItemRepository.findByServiceDate(date).stream()
+        .map(workItem -> new WorkItemDto(workItem))
+        .collect(Collectors.toList());
   }
 
   public void cancel(Long id) {
     workItemRepository.cancel(id);
-  }
-
-  private WorkItem merge(WorkItem workItem) {
-    if (workItem == null || workItem.getId() == null) {
-      throw new WorkItemNotSpecifiedException();
-    }
-    WorkItem workItemStored = workItemRepository.findById(workItem.getId())
-        .orElseThrow(() -> new WorkItemNotFoundException());
-    return Utils.updateState(workItemStored, workItem);
   }
 }

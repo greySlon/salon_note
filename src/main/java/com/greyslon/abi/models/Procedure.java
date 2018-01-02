@@ -1,5 +1,7 @@
 package com.greyslon.abi.models;
 
+import com.greyslon.abi.models.dto.ProcedureDto;
+
 import java.util.List;
 import java.util.Objects;
 
