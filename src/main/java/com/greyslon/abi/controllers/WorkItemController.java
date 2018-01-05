@@ -1,5 +1,6 @@
 package com.greyslon.abi.controllers;
 
+import com.greyslon.abi.models.dto.WeekSchedule;
 import com.greyslon.abi.models.dto.WorkItemDto;
 import com.greyslon.abi.services.WorkItemService;
 
@@ -39,7 +40,7 @@ public class WorkItemController {
   }
 
   @RequestMapping(value = "/get_week")
-  public Map<Integer, List<WorkItemDto>> getWorkItemsByWeek(
+  public Map<Integer, WeekSchedule> getWorkItemsByWeek(
       @RequestParam(name = "master_id") Long master_id,
       @RequestParam(name = "week_offset") long weekOffset) {
     return workItemService.getWeekSchedule(master_id, weekOffset);

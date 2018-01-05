@@ -1,11 +1,11 @@
 package com.greyslon.abi.services;
 
-import com.greyslon.abi.domain.Utils;
 import com.greyslon.abi.exceptions.WorkItemNotFoundException;
 import com.greyslon.abi.exceptions.WorkItemNotSpecifiedException;
 import com.greyslon.abi.models.Person;
 import com.greyslon.abi.models.WorkItem;
 import com.greyslon.abi.models.dto.ProcedureDto;
+import com.greyslon.abi.models.dto.WeekSchedule;
 import com.greyslon.abi.models.dto.WorkItemDto;
 import com.greyslon.abi.repositories.WorkItemRepository;
 
@@ -81,7 +81,7 @@ public class WorkItemService {
         .collect(Collectors.toList());
   }
 
-  public Map<Integer, List<WorkItemDto>> getWeekSchedule(Long masterId, long weekOffset) {
+  public Map<Integer, WeekSchedule> getWeekSchedule(Long masterId, long weekOffset) {
     LocalDate currentDate = LocalDate.now();
     LocalDate startDate = currentDate
         .minusDays(currentDate.getDayOfWeek().ordinal() + 7 * weekOffset);
@@ -89,13 +89,16 @@ public class WorkItemService {
     List<WorkItem> weekSchedule = workItemRepository
         .findByPeriodAndMaster(startDate, endDate, masterId);
 
-    Map<Integer, List<WorkItemDto>> map = new HashMap<>();
+    Map<Integer, WeekSchedule> map = new HashMap<>();
     IntStream.range(0, 7).forEach(day -> {
       List<WorkItemDto> dtoList = weekSchedule.stream()
           .filter(wi -> wi.getServiceDate().getDayOfWeek().ordinal() == day)
           .map(wi -> new WorkItemDto(wi))
           .collect(Collectors.toList());
-      map.put(day, dtoList);
+      WeekSchedule schedule = new WeekSchedule();
+      schedule.serviceDate = startDate.plusDays(day);
+      schedule.workItemDtos = dtoList;
+      map.put(day, schedule);
     });
     return map;
   }
