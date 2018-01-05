@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 public class PersonDto {
 
+  @JsonProperty(value = "id")
+  public Long id;
+
   @JsonProperty(value = "first_name")
   public String firstName;
 
@@ -32,6 +35,7 @@ public class PersonDto {
   }
 
   public PersonDto(Person person) {
+    this.id = person.getId();
     this.firstName = person.getFirstName();
     this.middleName = person.getMiddleName();
     this.lastName = person.getLastName();

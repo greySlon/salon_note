@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/person")
@@ -30,9 +29,8 @@ public class PersonController {
   }
 
   @RequestMapping(value = "/update", method = RequestMethod.POST)
-  public void update(@RequestBody PersonDto personDto,
-      @RequestParam(name = "person_id") Long personId) {
-    personService.update(personDto, personId);
+  public void update(@RequestBody PersonDto personDto) {
+    personService.update(personDto);
   }
 
   @RequestMapping(value = "/clients")

@@ -36,8 +36,8 @@ public class PersonService {
     personRepository.save(person);
   }
 
-  public void update(PersonDto personDto, Long personId) {
-    Person personStored = findPerson(personId);
+  public void update(PersonDto personDto) {
+    Person personStored = findPerson(personDto.id);
 
     String firstName = personDto.firstName;
     String middleName = personDto.middleName;
