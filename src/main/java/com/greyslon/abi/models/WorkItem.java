@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.springframework.data.jpa.domain.AbstractAuditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -12,6 +15,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +27,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "workitems")
-public class WorkItem {
+@EntityListeners(AuditingEntityListener.class)
+public class WorkItem extends AbstractAuditable<Person, Long> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
