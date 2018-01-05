@@ -29,7 +29,7 @@ public class WorkItemDto {
   @JsonProperty(value = "procedures")
   public ProcedureDto[] procedures;
   @JsonProperty(value = "client_detales")
-  public ClientDetales clientDetails;
+  public ClientDetails clientDetails;
 
   public WorkItemDto() {
   }
@@ -44,7 +44,7 @@ public class WorkItemDto {
         .collect(Collectors.toList()).toArray(new ProcedureDto[0]);
     this.serviceDate = workItem.getServiceDate();
     this.serviceTime = workItem.getServiceTime();
-    this.clientDetails = new ClientDetales(workItem.getClient());
+    this.clientDetails = new ClientDetails(workItem.getClient());
   }
 
   public WorkItem buildWorkItem() {

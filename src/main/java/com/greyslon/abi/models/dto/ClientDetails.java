@@ -3,18 +3,13 @@ package com.greyslon.abi.models.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.greyslon.abi.models.Person;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ClientDetales {
+public class ClientDetails {
 
-  @JsonProperty(value = "first_name")
-  public String firstName;
-
-  @JsonProperty(value = "middle_name")
-  public String middleName;
-
-  @JsonProperty(value = "last_name")
-  public String lastName;
+  @JsonProperty(value = "name")
+  public String name;
 
   @JsonProperty(value = "phones")
   public String phones;
@@ -22,10 +17,10 @@ public class ClientDetales {
   @JsonProperty(value = "photo")
   public String photo;
 
-  public ClientDetales(Person client) {
-    this.firstName = client.getFirstName();
-    this.middleName = client.getMiddleName();
-    this.lastName = client.getLastName();
+  public ClientDetails(Person client) {
+    this.name = Arrays.asList(client.getFirstName(), client.getMiddleName(), client.getLastName())
+        .stream()
+        .collect(Collectors.joining(" "));
     this.photo = client.getPhoto();
     this.phones = client.getPhones().stream()
         .map(phone -> phone.getPhoneNumber())
