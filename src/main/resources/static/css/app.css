@@ -1,69 +1,101 @@
 /* CSS Document */
-.hide{display:none;}
+.hide {
+  display: none;
+}
 
-.login_form{
-	display: flex;
-    width: 300px;
-    border-radius: 0.5rem;
-    box-shadow: 2px 2px 13px #000;
-    border: 1px solid #909;
-    margin: auto;
-    margin-top: 30px;
-    flex-flow: column;}
+.login_form {
+  display: flex;
+  width: 300px;
+  border-radius: 0.5rem;
+  box-shadow: 2px 2px 13px #000;
+  border: 1px solid #909;
+  margin: auto;
+  margin-top: 30px;
+  flex-flow: column;
+}
 
-.login_form input{ margin:10px;}
+.login_form input {
+  margin: 10px;
+}
 
-.admin-navigation{
-	text-align: center;}
+.admin-navigation {
+  text-align: center;
+}
 
 .admin-navigation button {
-    margin: 0.5rem;
+  margin: 0.5rem;
+}
+
+.master_block {
+  display: flex;
+  justify-content: center;
+}
+
+.master {
+  width: 6rem;
+  float: left;
+  text-align: center;
 }
 
 .master_photo {
-    display: flex;
-    justify-content: center;
-}
-.master_block {
-    width: 6rem;
-    float: left;
-    text-align: center;
-}
-.master_block img {
-    max-width: 5rem;
-    border-radius: 2.5rem;
-}
-/*schedule*/
-.schedule{
-	  border: 1px solid #000;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    box-shadow: 2px 1px 6px #000;}
-.schedule h2{
-    display: block;
-    margin-bottom: 15px;
-    border-bottom: dashed;
-    font-size: 1.1rem;
-    font-style: italic;
-	}
-.time{
-	  font-weight: bold;
-    margin: 0 0.1rem;
-    display: inline-block;}
-.comment {
-    /*border: 1px dotted #000;*/
-    padding: 0.3rem;
-    margin-top: 0.3rem;
+  max-width: 5rem;
+  border-radius: 2.5rem;
 }
 
-.add-widjet{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background-color:#aee4ae;
+/*schedule*/
+.schedule {
+  border: 1px solid #000;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 2px 1px 6px #000;
 }
+
+.schedule h2 {
+  display: block;
+  margin-bottom: 15px;
+  border-bottom: dashed;
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.time {
+  font-weight: bold;
+  margin: 0 0.1rem;
+  display: inline-block;
+}
+
+.comment {
+  /*border: 1px dotted #000;*/
+  padding: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.add-widjet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #aee4ae;
+}
+
 .add-widjet button {
-    min-width: 200px;
+  min-width: 200px;
+}
+
+.active {
+  border: 2px solid #fe0;
+}
+
+.workitem {
+  display: flex;
+  flex-direction: column;
+}
+
+.update_workitem {
+  background-color: #aee4ae;
+  margin: 0.2rem;
+  padding: 0.2rem;
+  /*border-bottom: 2px solid blue;*/
+  text-align: center;
 }

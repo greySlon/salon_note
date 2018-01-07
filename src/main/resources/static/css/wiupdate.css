@@ -1,0 +1,60 @@
+
+.block {
+  margin: 3px;
+  padding: 3px;
+  border: 1px solid #000;
+}
+
+.workitem-container {
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+}
+
+.time-container {
+  width: 22rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.procedures-container {
+  flex: 1;
+  width: 22rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.comment-container {
+  flex-direction: column;
+  display: flex;
+  min-width: 22rem;
+  text-align: right;
+}
+
+.phone-container {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.phone-container input {
+  flex: 1;
+}
+
+.procedures-container button {
+  width: 10rem;
+  margin: 0px;
+  padding: 3px;
+  border-bottom: 1px solid #000;
+}
+
+.comment-container textarea {
+  height: 5rem;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
