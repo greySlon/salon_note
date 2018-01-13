@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-export default class Master extends Component {
+export default class Master extends React.Component {
   constructor(props) {
     super(props);
     this.onMasterClick = this.onMasterClick.bind(this);
@@ -14,7 +14,7 @@ export default class Master extends Component {
     const cssStyle = this.props.active ? "master_photo active" : "master_photo";
     return (
         <div className={"master"}>
-          <img className={cssStyle} src={"img/" + this.props.profile.photo}
+          <img className={cssStyle} src={"/img/" + this.props.profile.photo}
                onClick={this.onMasterClick}
                data-id={this.props.profile.id}/>
           <div>{this.props.profile.first_name}</div>
