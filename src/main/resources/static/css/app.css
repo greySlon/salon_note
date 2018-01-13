@@ -1,4 +1,11 @@
 /* CSS Document */
+.loading {
+  margin: 10% 45%;
+  background: url(/img/load.gif) no-repeat;
+  width: 64px;
+  height: 64px;
+}
+
 .hide {
   display: none;
 }
@@ -67,7 +74,7 @@
 .comment {
   /*border: 1px dotted #000;*/
   padding: 0.3rem;
-  margin-top: 0.3rem;
+  /*margin-top: 0.3rem;*/
 }
 
 .add-widjet {
@@ -98,4 +105,24 @@
   padding: 0.2rem;
   /*border-bottom: 2px solid blue;*/
   text-align: center;
+}
+
+.add-workitem {
+  float: right;
+  margin: -5px 10px;
+  padding: 0 10px;
+  background-color: #aee4ae;
+}
+
+.wi-remove-btn {
+  float: left;
+}
+
+.wi-update-btn {
+  float: right;
+}
+
+.border-container {
+  border: 1px solid #000;
+  margin: 2px;
 }
