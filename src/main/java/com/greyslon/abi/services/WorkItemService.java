@@ -11,6 +11,7 @@ import com.greyslon.abi.repositories.WorkItemRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class WorkItemService {
     workItemRepository.save(workItem);
   }
 
+  @Transactional
   public void update(WorkItemDto workItemDto) {
     if (workItemDto.id == null) {
       throw new WorkItemNotSpecifiedException();
@@ -84,7 +86,7 @@ public class WorkItemService {
   public Map<Integer, WeekSchedule> getWeekSchedule(Long masterId, long weekOffset) {
     LocalDate currentDate = LocalDate.now();
     LocalDate startDate = currentDate
-        .minusDays(currentDate.getDayOfWeek().ordinal() + 7 * weekOffset);
+        .minusDays(currentDate.getDayOfWeek().ordinal() - 7 * weekOffset);
     LocalDate endDate = startDate.plusDays(6);
     List<WorkItem> weekSchedule = workItemRepository
         .findByPeriodAndMaster(startDate, endDate, masterId);

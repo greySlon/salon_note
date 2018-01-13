@@ -8,6 +8,7 @@ import com.greyslon.abi.repositories.ProcedureRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +49,7 @@ public class ProcedureService {
     procedureRepository.enable(id);
   }
 
+  @Transactional
   public Procedure findProcedure(Long procedureId) {
     if (procedureId == null) {
       throw new ProcedureNotSpecifiedException();

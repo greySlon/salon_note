@@ -23,7 +23,7 @@ public class WorkItemController {
   @Autowired
   private WorkItemService workItemService;
 
-  @RequestMapping(value = "/add", method = RequestMethod.PUT)
+  @RequestMapping(value = "/add", method = RequestMethod.POST)
   public void add(@RequestBody WorkItemDto workItemDto) {
     workItemService.add(workItemDto);
   }
@@ -53,7 +53,7 @@ public class WorkItemController {
   }
 
   @RequestMapping(value = "/cancel", method = RequestMethod.POST)
-  public void cancel(@RequestParam(name = "masterId") Long id) {
+  public void cancel(@RequestParam(name = "workitem_id") Long id) {
     workItemService.cancel(id);
   }
 }

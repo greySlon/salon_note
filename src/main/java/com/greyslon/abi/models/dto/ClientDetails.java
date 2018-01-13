@@ -17,6 +17,9 @@ public class ClientDetails {
   @JsonProperty(value = "photo")
   public String photo;
 
+  public ClientDetails() {
+  }
+
   public ClientDetails(Person client) {
     this.name = Arrays.asList(client.getFirstName(), client.getMiddleName(), client.getLastName())
         .stream()
