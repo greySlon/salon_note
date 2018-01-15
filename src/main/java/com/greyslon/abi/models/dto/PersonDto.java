@@ -10,14 +10,8 @@ public class PersonDto {
   @JsonProperty(value = "id")
   public Long id;
 
-  @JsonProperty(value = "first_name")
-  public String firstName;
-
-  @JsonProperty(value = "middle_name")
-  public String middleName;
-
-  @JsonProperty(value = "last_name")
-  public String lastName;
+  @JsonProperty(value = "name")
+  public String name;
 
   @JsonProperty(value = "phones")
   public PhoneDto[] phones;
@@ -36,9 +30,7 @@ public class PersonDto {
 
   public PersonDto(Person person) {
     this.id = person.getId();
-    this.firstName = person.getFirstName();
-    this.middleName = person.getMiddleName();
-    this.lastName = person.getLastName();
+    this.name = person.getName();
     this.email = person.getEmail();
     this.photo = person.getPhoto();
     this.phones = person.getPhones().stream()

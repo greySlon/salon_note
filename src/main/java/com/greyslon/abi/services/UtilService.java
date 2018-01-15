@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,12 +39,14 @@ public class UtilService {
     if (part == null || part.isEmpty()) {
       return Collections.EMPTY_LIST;
     }
-    part = part.trim();
-    List<Person> persons = personRepository
-        .findByFirstNameLike(MessageFormat.format(template, part), new PageRequest(0, 5));
+    List<Person> persons = personRepository.findByPartOfNames(Arrays.stream(part.split("\\s"))
+            .filter(s -> !s.isEmpty())
+            .map(s -> MessageFormat.format(template, s))
+            .collect(Collectors.toList())
+        , new PageRequest(0, 5));
     return persons.stream()
         .map(p -> new NamePhonePair(
-                p.getFirstName(),
+                p.getName(),
                 p.getPhones().stream()
                     .map(ph -> ph.getPhoneNumber())
                     .collect(Collectors.toList())

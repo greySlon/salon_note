@@ -2,7 +2,6 @@ import React from 'react';
 import Day from './Day';
 import $$restapi from './$$restapi.js';
 
-
 export default class Week extends React.Component {
   constructor(props) {
     super(props);
@@ -13,7 +12,7 @@ export default class Week extends React.Component {
       masterId: this.props.masterid,
       schedule: []
     };
-    this.api=new $$restapi();
+    this.api = new $$restapi();
     this.offset = 0;
     this.refreshSchedule();
   }
@@ -39,7 +38,11 @@ export default class Week extends React.Component {
   }
 
   refreshSchedule() {
-    this.api.doGetRequest(r => {console.log("refresh set state");console.table(r);this.setState({schedule: r})}
+    this.api.doGetRequest(r => {
+          console.log("refresh set state");
+          console.table(r);
+          this.setState({schedule: r})
+        }
         , this.buildUrl(this.state.masterId, this.offset));
     console.log("refresh week");
   }
@@ -50,7 +53,8 @@ export default class Week extends React.Component {
     const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница",
       "Суббота", "Воскресенье"];
 
-    console.log("Week#render.masterId:" + this.state.masterId + "; offset:" + this.offset);
+    console.log("Week#render.masterId:" + this.state.masterId + "; offset:"
+        + this.offset);
     console.table(schedule);
 
     if (schedule.length == 0) {

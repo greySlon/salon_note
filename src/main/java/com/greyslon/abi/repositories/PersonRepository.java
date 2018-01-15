@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +27,30 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
       + " where ph.phone_number = ?1", nativeQuery = true)
   Optional<Person> findByPhones(String phone);
 
-  @Query(value =
-      "select p from Person as p where p.firstName like ?1")
-  List<Person> findByFirstNameLike(String nameWrapped, Pageable pageable);
+  @Query(value = "select p from Person as p"
+      + " where p.name like ?1")
+  List<Person> findByPartOfNames(String part1, Pageable pageable);
 
-  List<Person> findAllByFirstName(String firstName);
+  @Query(value = "select p from Person as p"
+      + " where p.name like ?1 and p.name like ?2")
+  List<Person> findByPartOfNames(String part1, String part2, Pageable pageable);
 
-  List<Person> findAllByLastName(String lastName);
+  @Query(value = "select p from Person as p"
+      + " where p.name like ?1 and p.name like ?2 and p.name like ?3")
+  List<Person> findByPartOfNames(String part1, String part2, String part3, Pageable pageable);
+
+  default List<Person> findByPartOfNames(List<String> parts, Pageable pageable) {
+    if (parts == null || parts.isEmpty()) {
+      return Collections.EMPTY_LIST;
+    }
+    if (parts.size() == 1) {
+      return findByPartOfNames(parts.get(0), pageable);
+    }
+    if (parts.size() == 2) {
+      return findByPartOfNames(parts.get(0), parts.get(1), pageable);
+    }
+    return findByPartOfNames(parts.get(0), parts.get(1), parts.get(2), pageable);
+  }
 
   Person save(Person person);
 }

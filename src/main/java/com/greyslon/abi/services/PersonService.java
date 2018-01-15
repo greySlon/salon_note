@@ -39,20 +39,12 @@ public class PersonService {
   public void update(PersonDto personDto) {
     Person personStored = findPerson(personDto.id);
 
-    String firstName = personDto.firstName;
-    String middleName = personDto.middleName;
-    String lastName = personDto.lastName;
+    String name = personDto.name;
     String email = personDto.email;
     String password = personDto.password;
 
-    if (!isNull(firstName)) {
-      personStored.setFirstName(firstName);
-    }
-    if (!isNull(middleName)) {
-      personStored.setMiddleName(middleName);
-    }
-    if (!isNull(lastName)) {
-      personStored.setLastName(lastName);
+    if (!isNull(name)) {
+      personStored.setName(name);
     }
     if (!isNull(email)) {
       personStored.setEmail(email);

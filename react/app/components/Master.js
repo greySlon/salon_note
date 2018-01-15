@@ -17,7 +17,7 @@ export default class Master extends React.Component {
           <img className={cssStyle} src={"/img/" + this.props.profile.photo}
                onClick={this.onMasterClick}
                data-id={this.props.profile.id}/>
-          <div>{this.props.profile.first_name}</div>
+          <div>{this.props.profile.name}</div>
         </div>
     )
   }
