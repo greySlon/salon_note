@@ -22,7 +22,7 @@ public interface PhoneRepository extends JpaRepository<Phone, Long> {
   Phone save(Phone phone);
 
   @Query(value =
-      "select new com.greyslon.abi.models.dto.NamePhonePair(p.person.name, p.phoneNumber)"
+      "select new com.greyslon.abi.models.dto.NamePhonePair(p.person.id, p.person.name, p.phoneNumber)"
           + " from Phone p "
           + " where p.phoneNumber like ?1 ")
   List<NamePhonePair> findByPhoneNumberIsLike(String phoneNumberWrapped, Pageable pageable);

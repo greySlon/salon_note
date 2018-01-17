@@ -29,14 +29,21 @@ public class WorkItemService {
   private ProcedureService procedureService;
   @Autowired
   private PersonService personService;
+  @Autowired
+  private UtilService utilService;
 
   public void add(WorkItemDto workItemDto) {
     WorkItem workItem = workItemDto.buildWorkItem();
     for (ProcedureDto procedure : workItemDto.procedures) {
       workItem.addProcedure(procedureService.findProcedure(procedure.id));
     }
+    Person client = null;
     Person master = personService.findPerson(workItemDto.masterId);
-    Person client = personService.findPerson(workItemDto.clientId);
+    if (workItemDto.clientId != null) {
+      client = personService.findPerson(workItemDto.clientId);
+    } else {
+      client = utilService.addOrGet(workItemDto.clientDetails);
+    }
     workItem.setMaster(master);
     workItem.setClient(client);
 

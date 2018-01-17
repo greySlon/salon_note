@@ -28,7 +28,7 @@ public class WorkItemDto {
   public Long clientId;
   @JsonProperty(value = "procedures")
   public ProcedureDto[] procedures;
-  @JsonProperty(value = "client_detales")
+  @JsonProperty(value = "client_details")
   public ClientDetails clientDetails;
 
   public WorkItemDto() {
