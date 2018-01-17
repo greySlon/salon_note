@@ -10,6 +10,7 @@ export default class Day extends React.Component {
       add: false
     }
     this.onCancel = this.onCancel.bind(this);
+    this.refresh = this.refresh.bind(this);
     console.log("DAY CONSTRUCT")
   }
 
@@ -24,6 +25,11 @@ export default class Day extends React.Component {
     }
   }
 
+  refresh() {
+    this.onCancel();
+    this.props.onChange();
+  }
+
   // componentDidUpdate(prevProps, prevState) {
   //   this.state.add = false;
   //   this.state.buttonName = "Add";
@@ -34,7 +40,7 @@ export default class Day extends React.Component {
     const workitems = this.props.workitems;
     const masters = this.props.masters;
     const addBlock = this.state.add
-        ? <AddWorkitem ref="addWi" masters={masters} onSave={this.onCancel}/>
+        ? <AddWorkitem ref="addWi" masters={masters} onSave={this.refresh}/>
         : null;
     return (
         <div className="schedule">
