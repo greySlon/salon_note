@@ -14,7 +14,7 @@ export default class SimpleSelect extends React.Component {
     const list = this.props.list;
     return (
         <select style={{/* display: none; */ height: "5.5rem"}}
-                onChange={this.onSelect} multiple="true">
+                onChange={this.onSelect} multiple={this.props.multiple}>
           {list.map((item, i) => <option key={i}>{item}</option>)}
         </select>
     )

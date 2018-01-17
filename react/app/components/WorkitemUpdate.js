@@ -66,7 +66,7 @@ export default class WorkitemUpdate extends React.Component {
 
   render() {
     const masters = this.props.masters;
-    const {comment, service_time, service_date, procedures, client_detales} = this.workitem;
+    const {comment, service_time, service_date, procedures, client_details} = this.workitem;
     console.log("WorkitemUpdate#render");
     console.table(this.workitem);
     return (
@@ -74,12 +74,12 @@ export default class WorkitemUpdate extends React.Component {
 
           <div className="border-container">
             <div className="phone-container block">
-              <div className={"time"}>{client_detales.name}</div>
-              <div>{client_detales.phones}</div>
+              <div className={"time"}>{client_details.name}</div>
+              <div>{client_details.phones}</div>
             </div>
             <div className="time-container block">
               <_Select ref="masterSelected" map={masters.map((item) => {
-                    return {value: item.id, key: item.first_name}
+                    return {value: item.id, key: item.name}
                   }
               )}/>
               <input type="date" ref="dateIn"

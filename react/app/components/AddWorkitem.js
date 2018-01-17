@@ -58,27 +58,40 @@ export default class AddWorkitem extends React.Component {
     return year + "-" + month + "-" + day;
   }
 
+  convertDate(date) {
+    let split = date.split("-");
+    return split[2] + "-" + split[1] + "-" + split[0];
+  }
+
   addWorkitem() {
     let workitem = {};
-    workitem.service_date;
-    workitem.service_time;
-    workitem.master_id;
+    let clientDetails = {};
+    clientDetails.name = this.refs.iname.value;
+    clientDetails.phones = this.refs.iphone.value;
+    workitem.service_date = this.convertDate(this.refs.dateIn.value);
+    workitem.service_time = this.refs.timeIn.value;
+    workitem.master_id = this.refs.masterSelected.state.value;
+
+    let clients = this.state.contactList.filter(
+        p => p.name == clientDetails.name && p.phone == clientDetails.phones)
+    .map(p => p.id);
+    workitem.client_id = clients.length > 0 ? clients.pop() : null;
     workitem.comment;
-    workitem.procedures;
-    workitem.client_info;
-    // this.api.doPostRequest(workitem
-    //     , "/workitem/add"
-    //     , this.props.onSave);
-    //     , false
-    console.log("ADD")
-    // console.log(this.refs.simpleSelect.selected)
+    workitem.procedures = this.state.addProcedures;
+    workitem.client_details = clientDetails;
+
+    this.api.doPostRequest(workitem
+        , "/workitem/add"
+        , false
+        , this.props.onSave);
+
+    console.log(workitem);
     console.table(workitem);
-    this.props.onSave();
   }
 
   onSelect(value) {
     console.log(value);
-    let split = value.split("-");
+    let split = value.split(" - ");
     this.refs.iname.value = split[0];
     this.refs.iphone.value = split[1];
     this.setState({
@@ -89,13 +102,9 @@ export default class AddWorkitem extends React.Component {
 
   onChangeName(e) {
     let value = e.target.value;
+    console.log("/utils/contact_by_name=" + value);
     this.api.doPostRequest("part=" + value, "/utils/contact_by_name", true,
-        list => {
-          this.setState({
-            contactList: JSON.parse(list).map(
-                pair => pair.name + " - " + pair.phone)
-          })
-        });
+        list => this.setState({contactList: JSON.parse(list)}));
     this.setState(
         {
           name: e.target.value
@@ -104,13 +113,9 @@ export default class AddWorkitem extends React.Component {
 
   onChangePhone(e) {
     let value = e.target.value;
+    console.log("/utils/contact_by_phone=" + value);
     this.api.doPostRequest("part=" + value, "/utils/contact_by_phone", true,
-        list => {
-          this.setState({
-            contactList: JSON.parse(list).map(
-                pair => pair.name + " - " + pair.phone)
-          })
-        });
+        list => this.setState({contactList: JSON.parse(list)}));
     this.setState(
         {
           phone: e.target.value
@@ -119,17 +124,17 @@ export default class AddWorkitem extends React.Component {
 
   render() {
     const masters = this.props.masters;
-    let now = new Date();
     console.table(masters);
     console.table(this.state.allProcedures)
     console.table(this.state.addProcedures)
+    console.table(this.state.contactList)
     return (
         <div className="workitem-container border-container">
 
           <div className="border-container">
             <div className="time-container block">
               <_Select ref="masterSelected" map={masters.map((item) => {
-                    return {value: item.id, key: item.first_name}
+                    return {value: item.id, key: item.name}
                   }
               )}/>
               <input type="date" ref="dateIn"
@@ -158,7 +163,9 @@ export default class AddWorkitem extends React.Component {
                        onChange={this.onChangePhone}
                        placeholder="Phone"/>
                 <SimpleSelect onSelect={this.onSelect}
-                              list={this.state.contactList}/>
+                              multiple={true}
+                              list={this.state.contactList.map(
+                                  pair => pair.name + " - " + pair.phone)}/>
               </div>
             </div>
             <button style={{margin: "5px"}} onClick={this.addWorkitem}>Add

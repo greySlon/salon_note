@@ -30,7 +30,7 @@ export default class WorkItem extends React.Component {
   render() {
     console.log("WorkItem#render");
     console.table(this.props.workitem)
-    const {comment, service_time, procedures, client_detales} = this.props.workitem;
+    const {comment, service_time, procedures, client_details} = this.props.workitem;
     const commentBlock = comment
         ? <div className="comment">{comment}</div>
         : null;
@@ -50,7 +50,7 @@ export default class WorkItem extends React.Component {
                 )
               }
               <span
-                  className="time">({client_detales.name},[{client_detales.phones}]).</span>
+                  className="time">({client_details.name},[{client_details.phones}]).</span>
             </div>
             {commentBlock}
           </div>
