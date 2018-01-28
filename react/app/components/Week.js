@@ -26,11 +26,13 @@ export default class Week extends React.Component {
   getNextWeek() {
     this.api.doGetRequest(r => this.setState({schedule: r})
         , this.buildUrl(this.state.masterId, ++this.offset));
+    this.refreshSchedule();
   }
 
   getPrevWeek() {
     this.api.doGetRequest(r => this.setState({schedule: r})
         , this.buildUrl(this.state.masterId, --this.offset));
+    this.refreshSchedule();
   }
 
   buildUrl(id, offset) {
