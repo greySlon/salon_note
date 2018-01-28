@@ -28,7 +28,10 @@ public interface WorkItemRepository extends JpaRepository<WorkItem, Long> {
   @Query("SELECT wi FROM WorkItem wi where wi.serviceDate = ?1")
   List<WorkItem> findByServiceDate(LocalDate date);
 
-  @Query("SELECT wi FROM WorkItem wi where wi.serviceDate between ?1 and ?2 and wi.master.id = ?3 ")
+  @Query("SELECT wi FROM WorkItem wi "
+      + "where wi.canceled = false "
+      + "and wi.serviceDate between ?1 and ?2 "
+      + "and wi.master.id = ?3 ")
   List<WorkItem> findByPeriodAndMaster(LocalDate startDate, LocalDate endDate, Long masterId);
 
   @Transactional
