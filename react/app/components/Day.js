@@ -52,7 +52,7 @@ export default class Day extends React.Component {
           {addBlock}
           {
             workitems.map((workitem, i) =>
-                <WorkItem onChange={this.props.onSelect}
+                <WorkItem onChange={this.props.onChange}
                           key={i}
                           workitem={workitem}
                           masters={masters}/>

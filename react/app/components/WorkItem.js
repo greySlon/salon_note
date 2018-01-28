@@ -24,7 +24,7 @@ export default class WorkItem extends React.Component {
 
   onUpdate() {
     this.onCancel();
-    this.props.onSelect();
+    this.props.onChange();
   }
 
   render() {
