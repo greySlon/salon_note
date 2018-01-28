@@ -1,12 +1,12 @@
 package com.greyslon.abi.services;
 
-import com.greyslon.abi.exceptions.ProcedureNotFoundException;
-import com.greyslon.abi.exceptions.ProcedureNotSpecifiedException;
+import com.greyslon.abi.exceptions.ApplicationException;
 import com.greyslon.abi.models.Procedure;
 import com.greyslon.abi.models.dto.ProcedureDto;
 import com.greyslon.abi.repositories.ProcedureRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class ProcedureService {
 
+  @Autowired
+  private MessageSource messageSource;
   @Autowired
   private ProcedureRepository procedureRepository;
 
@@ -52,9 +54,9 @@ public class ProcedureService {
   @Transactional
   public Procedure findProcedure(Long procedureId) {
     if (procedureId == null) {
-      throw new ProcedureNotSpecifiedException();
+      throw new ApplicationException("procedure.not_specified");
     }
     return procedureRepository.findById(procedureId)
-        .orElseThrow(() -> new ProcedureNotFoundException());
+        .orElseThrow(() -> new ApplicationException("procedure.not_found"));
   }
 }

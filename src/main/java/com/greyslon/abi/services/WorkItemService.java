@@ -1,9 +1,9 @@
 package com.greyslon.abi.services;
 
-import com.greyslon.abi.exceptions.WorkItemNotFoundException;
-import com.greyslon.abi.exceptions.WorkItemNotSpecifiedException;
+import com.greyslon.abi.exceptions.ApplicationException;
 import com.greyslon.abi.models.Person;
 import com.greyslon.abi.models.WorkItem;
+import com.greyslon.abi.models.dto.ClientDetails;
 import com.greyslon.abi.models.dto.ProcedureDto;
 import com.greyslon.abi.models.dto.WeekSchedule;
 import com.greyslon.abi.models.dto.WorkItemDto;
@@ -42,7 +42,14 @@ public class WorkItemService {
     if (workItemDto.clientId != null) {
       client = personService.findPerson(workItemDto.clientId);
     } else {
-      client = utilService.addOrGet(workItemDto.clientDetails);
+      ClientDetails clientDetails = workItemDto.clientDetails;
+      if (clientDetails.name == null
+          || clientDetails.name.isEmpty()
+          || clientDetails.phones == null
+          || clientDetails.phones.isEmpty()) {
+        throw new ApplicationException("client_detail.invalid");
+      }
+      client = utilService.addOrGet(clientDetails);
     }
     workItem.setMaster(master);
     workItem.setClient(client);
@@ -53,10 +60,10 @@ public class WorkItemService {
   @Transactional
   public void update(WorkItemDto workItemDto) {
     if (workItemDto.id == null) {
-      throw new WorkItemNotSpecifiedException();
+      throw new ApplicationException("workitem.not_specified");
     }
     WorkItem workItem = workItemRepository.findById(workItemDto.id)
-        .orElseThrow(() -> new WorkItemNotFoundException());
+        .orElseThrow(() -> new ApplicationException("workitem.not_found"));
 
     if (workItemDto.comment != null) {
       workItem.setComment(workItemDto.comment);

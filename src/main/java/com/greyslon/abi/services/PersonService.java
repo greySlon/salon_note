@@ -1,9 +1,6 @@
 package com.greyslon.abi.services;
 
-import com.greyslon.abi.exceptions.PersonNotFoundException;
-import com.greyslon.abi.exceptions.PersonNotSpecifiedException;
-import com.greyslon.abi.exceptions.PhoneAnotherOwnerException;
-import com.greyslon.abi.exceptions.PhoneNotFoundException;
+import com.greyslon.abi.exceptions.ApplicationException;
 import com.greyslon.abi.models.Person;
 import com.greyslon.abi.models.Phone;
 import com.greyslon.abi.models.dto.PersonDto;
@@ -73,7 +70,7 @@ public class PersonService {
 
   private void checkPhoneOwner(Person person, Phone phone) {
     if (!(phone.getPerson() == null || phone.getPerson().equals(person))) {
-      throw new PhoneAnotherOwnerException(phone.getPhoneNumber());
+      throw new ApplicationException("phone.other_owner", phone.getPhoneNumber());
     }
   }
 
@@ -103,15 +100,16 @@ public class PersonService {
 
   public PersonDto getByPhone(String phone) {
     Person person = personRepository.findByPhones(phone)
-        .orElseThrow(() -> new PhoneNotFoundException());
+        .orElseThrow(() -> new ApplicationException("phone.not_found"));
     return new PersonDto(person);
   }
 
   public Person findPerson(Long clientId) {
     if (clientId == null) {
-      throw new PersonNotSpecifiedException();
+      throw new ApplicationException("person.not_specified");
     }
-    return personRepository.findById(clientId).orElseThrow(() -> new PersonNotFoundException());
+    return personRepository.findById(clientId)
+        .orElseThrow(() -> new ApplicationException("person.not_found"));
   }
 
   private boolean isNull(String str) {
