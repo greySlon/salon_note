@@ -76,7 +76,7 @@ export default class AddWorkitem extends React.Component {
         p => p.name == clientDetails.name && p.phone == clientDetails.phones)
     .map(p => p.id);
     workitem.client_id = clients.length > 0 ? clients.pop() : null;
-    workitem.comment;
+    workitem.comment = this.refs.commentIn.value;
     workitem.procedures = this.state.addProcedures;
     workitem.client_details = clientDetails;
 
@@ -168,6 +168,7 @@ export default class AddWorkitem extends React.Component {
                                   pair => pair.name + " - " + pair.phone)}/>
               </div>
             </div>
+            <textarea ref="commentIn" placeholder="Comment"></textarea>
             <button style={{margin: "5px"}} onClick={this.addWorkitem}>Add
             </button>
           </div>
