@@ -33,6 +33,9 @@ public class UtilService {
       return Collections.EMPTY_LIST;
     }
     part = part.replaceAll("\\D+", "");
+    if (part.isEmpty()) {
+      return Collections.EMPTY_LIST;
+    }
     return phoneRepository
         .findByPhoneNumberIsLike(MessageFormat.format(template, part), new PageRequest(0, 5));
   }
